@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔒 SDD Protected App</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-user-select: none; }
+        body { 
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            padding: 20px;
+        }
+        .unlock-container {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .lock-icon { 
+            font-size: 50px; 
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        h2 { margin-bottom: 10px; color: #667eea; }
+        p { margin-bottom: 20px; font-size: 14px; opacity: 0.8; }
+        .password-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #667eea;
+            background: transparent;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            margin-bottom: 20px;
+            outline: none;
+        }
+        .password-input:focus { border-color: #764ba2; }
+        .unlock-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(145deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .unlock-btn:active { transform: scale(0.96); }
+        .error-msg { color: #ff4444; margin-top: 10px; font-size: 12px; display: none; }
+        .app-content { display: none; }
+        
+        /* Anti-debug and anti-copy measures */
+        .anti-debug {
+            position: fixed;
+            top: -9999px;
+            left: -9999px;
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="unlockScreen" class="unlock-container">
+        <div class="lock-icon">🔒</div>
+        <h2>App Locked</h2>
+        <p>Enter password to access this application</p>
+        <input type="password" id="appPassword" class="password-input" placeholder="Enter app password">
+        <button class="unlock-btn" onclick="verifyAppPassword()">UNLOCK APP</button>
+        <div id="errorMsg" class="error-msg">Wrong password! Code will self-destruct if you try again.</div>
+    </div>
+
+    <div id="appContent" class="app-content">
+        <!-- Original app content will be loaded here -->
+    </div>
+
+    <script>
+        // Enhanced protection system
+        const APP_PASSWORD = "c2RkMTIz";
+        let attempts = 0;
+        const MAX_ATTEMPTS = 3;
+        
+        // Anti-tampering measures
+        Object.defineProperty(window, 'console', {
+            get: function() {
+                if(attempts >= MAX_ATTEMPTS - 1) {
+                    document.body.innerHTML = '<div style="background:black; color:red; padding:20px; text-align:center;"><h1>⚠️ CODE PROTECTED</h1><p>Source code has been destroyed for security</p></div>';
+                    throw new Error('Console access blocked');
+                }
+                return console;
+            }
+        });
+
+        // Prevent DevTools detection
+        setInterval(function() {
+            if (window.outerHeight - window.innerHeight > 200 || 
+                window.outerWidth - window.innerWidth > 200) {
+                if(attempts >= MAX_ATTEMPTS - 1) {
+                    document.body.innerHTML = '<div style="background:black; color:red; padding:20px; text-align:center;"><h1>⚠️ SECURITY BREACH</h1><p>Developer tools detected - Content destroyed</p></div>';
+                }
+            }
+        }, 1000);
+
+        // Self-destruct mechanism
+        function destroyCode() {
+            document.body.innerHTML = '<div style="background:black; color:red; padding:20px; text-align:center;"><h1>💀 CODE DESTROYED</h1><p>Unauthorized access attempt detected</p></div>';
+            // Clear all stored data
+            sessionStorage.clear();
+            localStorage.clear();
+            // Override all functions
+            window.location.reload = function() {};
+            window.history.pushState = function() {};
+        }
+
+        function verifyAppPassword() {
+            const input = document.getElementById('appPassword').value;
+            const hashedInput = btoa(input).substring(0, 10);
+            
+            if (hashedInput === APP_PASSWORD) {
+                // Correct password - load the app
+                document.getElementById('unlockScreen').style.display = 'none';
+                document.getElementById('appContent').style.display = 'block';
+                loadAppContent();
+            } else {
+                attempts++;
+                document.getElementById('errorMsg').style.display = 'block';
+                
+                if (attempts >= MAX_ATTEMPTS) {
+                    // Self-destruct after too many attempts
+                    destroyCode();
+                }
+            }
+        }
+
+        function loadAppContent() {
+            // Decode and load the actual app content
+            const encrypted = "PCFkb2N0eXBlIGh0bWw+CjxodG1sPgogICAgPGhlYWQ+CiAgICAgICAgPG1ldGEgY2hhcnNldD0iVVRGLTgiPgogICAgICAgIDx0aXRsZT5OZXcgV2Vic2l0ZTwvdGl0bGU+CiAgICAgICAgPHN0eWxlPgogICAgICAgICAgICBib2R5IHsgYmFja2dyb3VuZDogI2YwZjBmMDsgY29sb3I6ICMzMzM7IGZvbnQtZmFtaWx5OiBzYW5zLXNlcmlmOyB0ZXh0LWFsaWduOiBjZW50ZXI7IHBhZGRpbmctdG9wOiA1MHB4OyB9CiAgICAgICAgICAgIGgxIHsgY29sb3I6ICMyMTk2RjM7IH0KICAgICAgICA8L3N0eWxlPgogICAgPC9oZWFkPgogICAgPGJvZHk+CiAgICAgICAgPGgxPkhlbGxvIFdvcmxkITwvaDE+CiAgICAgICAgPHA+Q3JlYXRlZCB3aXRoIEhvcFdlYiBVbHRpbWF0ZS48L3A+CiAgICAgICAgPHNjcmlwdD4KICAgICAgICAgICAgY29uc29sZS5sb2coIldlbGNvbWUgdG8gSG9wV2ViISIpOwogICAgICAgIDwvc2NyaXB0PgogICAgPC9ib2R5Pgo8L2h0bWw+";
+            try {
+                const decoded = atob(encrypted);
+                document.getElementById('appContent').innerHTML = decoded;
+                
+                // Execute any scripts in the loaded content
+                const scripts = document.getElementById('appContent').getElementsByTagName('script');
+                for(let script of scripts) {
+                    eval(script.innerHTML);
+                }
+            } catch(e) {
+                console.log("Error loading content");
+            }
+        }
+
+        // Prevent copy/paste
+        document.addEventListener('copy', (e) => e.preventDefault());
+        document.addEventListener('cut', (e) => e.preventDefault());
+        document.addEventListener('paste', (e) => e.preventDefault());
+        document.addEventListener('contextmenu', (e) => e.preventDefault());
+        document.addEventListener('keydown', (e) => {
+            if (e.keyCode === 123 || // F12
+                (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
+                (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
+                (e.ctrlKey && e.keyCode === 85)) { // Ctrl+U
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // Anti-AI copy detection
+        const style = document.createElement('style');
+        style.innerHTML = '.protected-content { display: none; }';
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
