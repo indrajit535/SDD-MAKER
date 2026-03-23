@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Sdd</title>
+    <script>
+        (function(){
+            document.addEventListener('contextmenu', event => event.preventDefault());
+            document.onkeydown = function(e) {
+                if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) return false;
+            }
+        })();
+        window.onload = function() {
+            var _sec = "PCFkb2N0eXBlIGh0bWw+CjxodG1sPgogICAgPGhlYWQ+CiAgICAgICAgPG1ldGEgY2hhcnNldD0iVVRGLTgiPgogICAgICAgIDx0aXRsZT5OZXcgV2Vic2l0ZTwvdGl0bGU+CiAgICAgICAgPHN0eWxlPgogICAgICAgICAgICBib2R5IHsgYmFja2dyb3VuZDogI2YwZjBmMDsgY29sb3I6ICMzMzM7IGZvbnQtZmFtaWx5OiBzYW5zLXNlcmlmOyB0ZXh0LWFsaWduOiBjZW50ZXI7IHBhZGRpbmctdG9wOiA1MHB4OyB9CiAgICAgICAgICAgIGgxIHsgY29sb3I6ICMyMTk2RjM7IH0KICAgICAgICA8L3N0eWxlPgogICAgPC9oZWFkPgogICAgPGJvZHk+CiAgICAgICAgPGgxPkhlbGxvIFdvcmxkITwvaDE+CiAgICAgICAgPHA+Q3JlYXRlZCB3aXRoIEhvcFdlYiBVbHRpbWF0ZS48L3A+CiAgICAgICAgPHNjcmlwdD4KICAgICAgICAgICAgY29uc29sZS5sb2coIldlbGNvbWUgdG8gSG9wV2ViISIpOwogICAgICAgIDwvc2NyaXB0PgogICAgPC9ib2R5Pgo8L2h0bWw+";
+            var _dec = decodeURIComponent(escape(window.atob(_sec)));
+            document.open();
+            document.write(_dec);
+            document.close();
+        };
+    </script>
+</head>
+<body><div style="text-align:center;padding:50px;font-family:sans-serif;">🔒 Loading Secure Site...</div></body>
+</html>
